@@ -1,6 +1,8 @@
 "use client"
 
 import GameCard from "@/components/GameCard/GameCard"
+import GameGrid from "@/components/GameGrid/GameGrid"
+import PageTitle from "@/components/PageTitle/PageTitle"
 import {
   BGGBoardgameResponse,
   boardgameFetcher,
@@ -9,7 +11,7 @@ import { PropsWithChildren } from "react"
 import useSWR, { Fetcher } from "swr"
 
 export default function Home() {
-  const startId = "199792,199793"
+  const startId = "199792,199793,174430,3955,284742,154203,218804"
   const {
     data: boardgamesData,
     error,
@@ -20,13 +22,12 @@ export default function Home() {
   )
   return (
     <>
-      <h1 className="mt-10 font-bold text-5xl mb-6">Shelf</h1>
+      <PageTitle>Shelf</PageTitle>
       {isLoading && <p className="text-slate-600 text-lg">Loading...</p>}
       {boardgamesData && (
         <div className="flex justify-between flex-wrap">
-          {boardgamesData.items.item.map((game) => {
-            return <GameCard key={game.$.id} boardgame={game} />
-          })}
+          {/* {JSON.stringify(boardgamesData.items.item[0].name[0].value)} */}
+          <GameGrid boardgames={boardgamesData.items.item} />
         </div>
       )}
     </>

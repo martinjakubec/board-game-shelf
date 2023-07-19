@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="relative">
+      <body className="relative bg-lime-50">
         <Appbar />
         <div className="container mx-auto p-4">{children}</div>
       </body>

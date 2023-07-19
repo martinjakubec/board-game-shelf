@@ -7,7 +7,7 @@ export default function Appbar() {
   ];
 
   return (
-    <div className="h-20 sticky top-0 bg-lime-500 ">
+    <div className="h-20 sticky top-0 bg-lime-500 z-50">
       <div className="container justify-end flex mx-auto p-4 h-full items-center">
         <AppbarLink href="/" text="BGS" className="mr-auto" />
         {menuLinks.map((link, i) => (
