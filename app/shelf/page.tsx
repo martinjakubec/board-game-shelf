@@ -26,7 +26,7 @@ export default function Home() {
       {isLoading && <p className="text-slate-600 text-lg">Loading...</p>}
       {boardgamesData && (
         <div className="flex justify-between flex-wrap">
-          {/* {JSON.stringify(boardgamesData.items.item[0].name[0].value)} */}
+          {/* {JSON.stringify(boardgamesData.items.item[0])} */}
           <GameGrid boardgames={boardgamesData.items.item} />
         </div>
       )}

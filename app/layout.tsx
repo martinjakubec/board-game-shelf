@@ -3,7 +3,7 @@ import "./globals.css"
 import Appbar from "@/components/Appbar/Appbar"
 
 export const metadata: Metadata = {
-  title: "Wiiiii",
+  title: "Board Game Shelf",
 }
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="relative bg-lime-50">
+      <body className="relative bg-slate-100">
         <Appbar />
         <div className="container mx-auto p-4">{children}</div>
       </body>

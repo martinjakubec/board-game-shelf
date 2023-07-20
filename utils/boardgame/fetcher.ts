@@ -40,6 +40,9 @@ export type BGGBoardgameItem = {
     ratings: {
       average: {
         value: string
+      },
+      averageweight: {
+        value: string
       }
     }
   }
