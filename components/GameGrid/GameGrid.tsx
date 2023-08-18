@@ -1,4 +1,4 @@
-import { BGGBoardgameItem } from "@/utils/boardgame/fetcher"
+import { BGGBoardgameItem } from "@/utils/user/fetcher"
 import GameCard from "../GameCard/GameCard"
 import { useEffect, useState } from "react"
 import GameDetailModal from "../GameDetailModal/GameDetailModal"
@@ -33,9 +33,8 @@ export default function GameGrid({
   }
 
   const hideModal = (e: KeyboardEvent | null) => {
-    console.log("hiding")
-
     if (e && e.type == "keydown" && (e as KeyboardEvent).code == "Escape") {
+      console.log("hiding")
       setModalId(null)
       setIsModalOpen(false)
     }

@@ -2,22 +2,21 @@
 
 import GameGrid from "@/components/GameGrid/GameGrid"
 import PageTitle from "@/components/PageTitle/PageTitle"
+import { userCollectionFetcher } from "@/utils/user/fetcher"
 import { FormEventHandler, useRef, useState } from "react"
 import useSWR from "swr"
 import { useRouter } from "next/navigation"
-import { userCollectionFetcher } from "@/utils/user/fetcher"
 
-export default function Home() {
-  const startId = "199792,199793,174430,3955,284742,154203,218804"
+export default function Page({ params }: { params: { username: string } }) {
   const {
     data: boardgamesData,
-    error,
+    error: userCollectionError,
     isLoading,
-  } = useSWR("Aenelruun", userCollectionFetcher)
+  } = useSWR(params.username, userCollectionFetcher)
 
   const [otherUsername, setOtherUsername] = useState<string>("")
-  const inputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
@@ -31,23 +30,31 @@ export default function Home() {
   return (
     <>
       <div className="flex justify-between items-center">
-        <PageTitle>Your shelf</PageTitle>
-        <form onSubmit={handleSubmit} className="flex gap-4 h-10">
-          <input
-            ref={inputRef}
-            type="text"
-            className="w-80 px-4 rounded-md"
-            placeholder="Username to find shelf for..."
-          ></input>
-          <button type="submit" className="bg-lime-300 px-4 rounded-md">
-            Go!
+        <PageTitle>{params.username}&apos;s shelf</PageTitle>
+        <div className="flex gap-4 h-10">
+          <form onSubmit={handleSubmit} className="h-full flex gap-4">
+            <input
+              ref={inputRef}
+              type="text"
+              className="w-80 px-4 rounded-md"
+              placeholder="Username to find shelf for..."
+            ></input>
+            <button type="submit" className="bg-lime-300 px-4 rounded-md">
+              Go!
+            </button>
+          </form>
+          <button
+            onClick={() => router.push("/shelf")}
+            className="bg-lime-200 px-4 rounded-md"
+          >
+            Reset
           </button>
-        </form>
+        </div>
       </div>
       {isLoading && <p className="text-slate-600 text-lg">Loading...</p>}
       {boardgamesData && (
         <div className="flex justify-between flex-wrap">
-          {/* {JSON.stringify(boardgamesData.items.item[0])} */}
+          {JSON.stringify(boardgamesData)}
           <GameGrid boardgames={boardgamesData.items.item} />
         </div>
       )}

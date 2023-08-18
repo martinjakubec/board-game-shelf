@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { BGGBoardgameItem } from "@/utils/boardgame/fetcher"
+import { BGGBoardgameItem } from "@/utils/user/fetcher"
 import Image from "next/image"
 import { MouseEventHandler } from "react"
 
@@ -22,7 +22,7 @@ export default function GameCard({
     >
       <img
         loading="lazy"
-        src={boardgame.image}
+        src={boardgame.thumbnail}
         className="w-full aspect-square object-cover bg-lime-200"
         alt={`Cover art for ${boardgameName}`}
       />
