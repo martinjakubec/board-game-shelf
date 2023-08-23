@@ -61,24 +61,24 @@ export type BGGBoardgameCollectionItem = {
 }
 
 export type BGGUserCollectionResponse = {
-  item: BGGBoardgameCollectionItem[]
-  totalitems: string
+  items: {
+    item: BGGBoardgameCollectionItem[]
+    totalitems: string
+  }
 }
 
-export const userCollectionFetcher: Fetcher<
-  BGGBoardgameResponse | undefined
-> = async (username: string) => {
+export const userCollectionFetcher: Fetcher<BGGBoardgameResponse> = async (
+  username: string
+) => {
   try {
-
-
     // ADD HANDLING FOR WHEN USER IS NOT FOUND/HAVE 0 GAMES IN COLLECTION
-
 
     const userCollectionResponse = await fetch(
       `https://boardgamegeek.com/xmlapi2/collection?username=${username}&brief=1&own=1`,
       { method: "GET" }
     )
     const parsedCollectionResponse = await userCollectionResponse.text()
+
     const collectionData: BGGUserCollectionResponse = await parseStringPromise(
       parsedCollectionResponse,
       {
@@ -87,9 +87,22 @@ export const userCollectionFetcher: Fetcher<
         explicitArray: false,
       }
     )
-    console.log(collectionData)
+    console.log("collectionData:", collectionData)
 
-    const boardGameIds = collectionData.item
+    const totalItems = parseInt(collectionData.items?.totalitems)
+    if (isNaN(totalItems)) throw new Error()
+
+    if (totalItems == 0) {
+      return {
+        items: {
+          item: [],
+        },
+      } as BGGBoardgameResponse
+      // see if the user exists and if it does,
+    } else {
+    }
+
+    const boardGameIds = collectionData.items.item
       .map((item) => {
         return item.objectid
       })
@@ -109,7 +122,8 @@ export const userCollectionFetcher: Fetcher<
 
     return boardgameData as BGGBoardgameResponse
   } catch (err) {
-    console.log(err)
-    return
+    const error = new Error("User not found", { cause: err })
+    // error.
+    throw error
   }
 }

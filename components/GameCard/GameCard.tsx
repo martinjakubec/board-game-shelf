@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { BGGBoardgameItem } from "@/utils/user/fetcher"
+import { BGGBoardgameItem } from "@/utils/collection/fetcher"
 import Image from "next/image"
 import { MouseEventHandler } from "react"
 

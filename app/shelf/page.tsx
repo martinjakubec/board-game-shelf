@@ -5,7 +5,7 @@ import PageTitle from "@/components/PageTitle/PageTitle"
 import { FormEventHandler, useRef, useState } from "react"
 import useSWR from "swr"
 import { useRouter } from "next/navigation"
-import { userCollectionFetcher } from "@/utils/user/fetcher"
+import { userCollectionFetcher } from "@/utils/collection/fetcher"
 
 export default function Home() {
   const startId = "199792,199793,174430,3955,284742,154203,218804"

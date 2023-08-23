@@ -2,7 +2,7 @@
 
 import GameGrid from "@/components/GameGrid/GameGrid"
 import PageTitle from "@/components/PageTitle/PageTitle"
-import { userCollectionFetcher } from "@/utils/user/fetcher"
+import { userCollectionFetcher } from "@/utils/collection/fetcher"
 import { FormEventHandler, useRef, useState } from "react"
 import useSWR from "swr"
 import { useRouter } from "next/navigation"
@@ -10,11 +10,10 @@ import { useRouter } from "next/navigation"
 export default function Page({ params }: { params: { username: string } }) {
   const {
     data: boardgamesData,
-    error: userCollectionError,
+    error: boardgamesError,
     isLoading,
   } = useSWR(params.username, userCollectionFetcher)
 
-  const [otherUsername, setOtherUsername] = useState<string>("")
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -52,9 +51,11 @@ export default function Page({ params }: { params: { username: string } }) {
         </div>
       </div>
       {isLoading && <p className="text-slate-600 text-lg">Loading...</p>}
+      {boardgamesError && (
+        <p className="text-slate-600 text-lg">{boardgamesError.message}</p>
+      )}
       {boardgamesData && (
         <div className="flex justify-between flex-wrap">
-          {JSON.stringify(boardgamesData)}
           <GameGrid boardgames={boardgamesData.items.item} />
         </div>
       )}

@@ -1,4 +1,4 @@
-import { BGGBoardgameItem } from "@/utils/user/fetcher"
+import { BGGBoardgameItem } from "@/utils/collection/fetcher"
 import GameCard from "../GameCard/GameCard"
 import { useEffect, useState } from "react"
 import GameDetailModal from "../GameDetailModal/GameDetailModal"
@@ -61,17 +61,21 @@ export default function GameGrid({
         />
       )}
 
-      <div className="grid grid-flow-row grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 w-full gap-6">
-        {sortedBoardgames.map((game) => {
-          return (
-            <GameCard
-              boardgame={game}
-              key={game.id}
-              showModalFunction={showModal}
-            />
-          )
-        })}
-      </div>
+      {sortedBoardgames.length > 0 ? (
+        <div className="grid grid-flow-row grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 w-full gap-6">
+          {sortedBoardgames.map((game) => {
+            return (
+              <GameCard
+                boardgame={game}
+                key={game.id}
+                showModalFunction={showModal}
+              />
+            )
+          })}
+        </div>
+      ) : (
+        <p>User has 0 boardgames in their BGG collection.</p>
+      )}
     </>
   )
 }
