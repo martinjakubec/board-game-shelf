@@ -87,7 +87,6 @@ export const userCollectionFetcher: Fetcher<BGGBoardgameResponse> = async (
         explicitArray: false,
       }
     )
-    console.log("collectionData:", collectionData)
 
     const totalItems = parseInt(collectionData.items?.totalitems)
     if (isNaN(totalItems)) throw new Error()
@@ -117,8 +116,6 @@ export const userCollectionFetcher: Fetcher<BGGBoardgameResponse> = async (
       mergeAttrs: true,
       explicitArray: false,
     })
-
-    // console.log(boardgameData)
 
     return boardgameData as BGGBoardgameResponse
   } catch (err) {

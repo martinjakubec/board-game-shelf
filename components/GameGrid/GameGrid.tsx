@@ -34,7 +34,6 @@ export default function GameGrid({
 
   const hideModal = (e: KeyboardEvent | null) => {
     if (e && e.type == "keydown" && (e as KeyboardEvent).code == "Escape") {
-      console.log("hiding")
       setModalId(null)
       setIsModalOpen(false)
     }
