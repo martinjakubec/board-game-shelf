@@ -1,10 +1,8 @@
-import { Metadata } from "next"
+"use client"
+
 import "./globals.css"
 import Appbar from "@/components/Appbar/Appbar"
-
-export const metadata: Metadata = {
-  title: "Board Game Shelf",
-}
+import { SessionProvider } from "next-auth/react"
 
 export default function RootLayout({
   children,
@@ -14,8 +12,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="relative bg-slate-100">
-        <Appbar />
-        <div className="container mx-auto p-4">{children}</div>
+        <SessionProvider>
+          <Appbar />
+          <div className="container mx-auto p-4">{children}</div>
+        </SessionProvider>
       </body>
     </html>
   )
