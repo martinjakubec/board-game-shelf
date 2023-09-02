@@ -67,9 +67,59 @@ export type BGGUserCollectionResponse = {
   }
 }
 
+const dummyResponse: BGGBoardgameResponse = {
+  items: {
+    item: [
+      {
+        description: "Test description",
+        id: "3955",
+        image:
+          "https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__original/img/AkbtYVc6xXJF3c9EUrakklcclKw=/0x0/filters:format(png)/pic6973671.png",
+        maxplayers: {
+          value: "2",
+        },
+        maxplaytime: {
+          value: "20",
+        },
+        minage: {
+          value: "20",
+        },
+        minplayers: {
+          value: "20",
+        },
+        minplaytime: {
+          value: "20",
+        },
+        name: {
+          sortindex: 1,
+          type: "primary",
+          value: "Test game",
+        },
+        thumbnail:
+          "https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__original/img/AkbtYVc6xXJF3c9EUrakklcclKw=/0x0/filters:format(png)/pic6973671.png",
+        statistics: {
+          ratings: {
+            average: {
+              value: "2",
+            },
+            averageweight: {
+              value: "4",
+            },
+          },
+        },
+        type: "BG type",
+        yearpublished: {
+          value: "2000",
+        },
+      },
+    ],
+  },
+}
+
 export const userCollectionFetcher: Fetcher<BGGBoardgameResponse> = async (
   username: string
 ) => {
+  return Promise.resolve(dummyResponse)
   try {
     // ADD HANDLING FOR WHEN USER IS NOT FOUND/HAVE 0 GAMES IN COLLECTION
 

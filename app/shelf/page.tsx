@@ -9,7 +9,6 @@ import { userCollectionFetcher } from "@/utils/collection/fetcher"
 import ShelfBar from "@/components/ShelfBar/ShelfBar"
 
 export default function Home() {
-  const startId = "199792,199793,174430,3955,284742,154203,218804"
   const {
     data: boardgamesData,
     error,
