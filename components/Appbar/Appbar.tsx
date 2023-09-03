@@ -1,22 +1,36 @@
-import AppbarLink from './AppbarLink';
+import AppbarButton from "./AppbarButton";
+import AppbarLink from "./AppbarLink"
 
 export default function Appbar() {
-  const menuLinks: {href: string; text: string}[] = [
-    {href: '/shelf', text: 'Shelf'},
-    {href: '#', text: 'Login/out'},
-  ];
+  const { data: session } = useSession()
+  const menuLinks: { href: string; text: string; protected: boolean }[] = [
+    { href: "/shelf", text: "Shelf", protected: true },
+    {
+      href: "/profile",
+      text: session?.user?.name || "Profile",
+      protected: true,
+    },
+  ]
 
   return (
     <div className="h-20 sticky top-0 bg-lime-500 z-50">
       <div className="container justify-end flex mx-auto p-4 h-full items-center">
         <AppbarLink href="/" text="BGS" className="mr-auto" />
-        {menuLinks.map((link, i) => (
-          <AppbarLink key={i} href={link.href} text={link.text} />
-        ))}
+        {menuLinks.map((link, i) => {
+          if (link.protected) {
+            if (session) {
+              return <AppbarLink key={i} href={link.href} text={link.text} />
+            } else {
+              return
+            }
+          } else {
+            return <AppbarLink key={i} href={link.href} text={link.text} />
+          }
+        })}
         <LoginButton />
       </div>
     </div>
-  );
+  )
 }
 
 import { useSession, signIn, signOut } from "next-auth/react"
@@ -25,15 +39,13 @@ export function LoginButton() {
   if (session) {
     return (
       <>
-        Signed in as {session?.user?.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
+        <AppbarButton text="Logout" onClick={() => signOut()} />
       </>
     )
   }
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <AppbarButton text="Login" onClick={() => signIn()} />
     </>
   )
 }
