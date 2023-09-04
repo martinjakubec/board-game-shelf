@@ -1,16 +1,21 @@
+import { useEffect } from "react";
 import AppbarButton from "./AppbarButton";
 import AppbarLink from "./AppbarLink"
+import { useSession as useAuthSession } from "next-auth/react";
 
 export default function Appbar() {
-  const { data: session } = useSession()
+  const { data } = useAuthSession()
   const menuLinks: { href: string; text: string; protected: boolean }[] = [
     { href: "/shelf", text: "Shelf", protected: true },
     {
       href: "/profile",
-      text: session?.user?.name || "Profile",
+      text: data?.user?.username || "Profile",
       protected: true,
     },
   ]
+  useEffect(() => {
+    console.log(data)
+  }, [data])
 
   return (
     <div className="h-20 sticky top-0 bg-lime-500 z-50">
@@ -18,7 +23,7 @@ export default function Appbar() {
         <AppbarLink href="/" text="BGS" className="mr-auto" />
         {menuLinks.map((link, i) => {
           if (link.protected) {
-            if (session) {
+            if (data) {
               return <AppbarLink key={i} href={link.href} text={link.text} />
             } else {
               return
