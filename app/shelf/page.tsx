@@ -1,10 +1,7 @@
 "use client"
 
 import GameGrid from "@/components/GameGrid/GameGrid"
-import PageTitle from "@/components/PageTitle/PageTitle"
-import { FormEventHandler, useRef, useState } from "react"
 import useSWR from "swr"
-import { useRouter } from "next/navigation"
 import { userCollectionFetcher } from "@/utils/collection/fetcher"
 import ShelfBar from "@/components/ShelfBar/ShelfBar"
 
@@ -14,10 +11,6 @@ export default function Home() {
     error,
     isLoading,
   } = useSWR("Aenelruun", userCollectionFetcher)
-
-  const [otherUsername, setOtherUsername] = useState<string>("")
-  const inputRef = useRef<HTMLInputElement>(null)
-  const router = useRouter()
 
   return (
     <>

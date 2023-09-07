@@ -13,6 +13,7 @@ export default function AppbarButton({
 }: AppbarButtonProps) {
   return (
     <div
+      tabIndex={0}
       onClick={onClick}
       className={
         "block text-2xl bg-transparent px-3 text-lime-50 hover:text-lime-800 font-bold rounded-md first:pl-0 last:pr-0 cursor-pointer" +

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import AppbarButton from "./AppbarButton";
 import AppbarLink from "./AppbarLink"
 import { useSession as useAuthSession } from "next-auth/react";
@@ -13,9 +12,6 @@ export default function Appbar() {
       protected: true,
     },
   ]
-  useEffect(() => {
-    console.log(data)
-  }, [data])
 
   return (
     <div className="h-20 sticky top-0 bg-lime-500 z-50">
