@@ -23,6 +23,7 @@ const handler = NextAuth({
           const user = await prisma.user.findFirst({
             where: {
               username,
+              deletedAt: null,
             },
           })
           if (user && (await compare(password, user.password))) {

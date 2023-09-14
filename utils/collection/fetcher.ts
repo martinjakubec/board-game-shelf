@@ -1,5 +1,5 @@
-import { Fetcher } from "swr"
 import { parseStringPromise } from "xml2js"
+import { QueryFunction } from "react-query"
 
 export type BGGBoardgameItem = {
   type: string
@@ -116,9 +116,7 @@ const dummyResponse: BGGBoardgameResponse = {
   },
 }
 
-export const userCollectionFetcher: Fetcher<BGGBoardgameResponse> = async (
-  username: string
-) => {
+export const userCollectionFetcher = async (username: string): Promise<BGGBoardgameResponse> => {
   return Promise.resolve(dummyResponse)
   try {
     // ADD HANDLING FOR WHEN USER IS NOT FOUND/HAVE 0 GAMES IN COLLECTION

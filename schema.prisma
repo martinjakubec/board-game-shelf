@@ -9,7 +9,9 @@ generator client {
 
 model User {
   id          String @id @default(uuid())
-  username    String
+  username    String @unique
   password    String
   bggUsername String
+  createdAt   DateTime @default(now())
+  deletedAt   DateTime?
 }
