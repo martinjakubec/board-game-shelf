@@ -28,16 +28,13 @@ export default function Input({
   const borderSetupString =
     "border-2 focus:border-lime-500 border-lime-300 focus:outline-none"
 
-  const [inputValue, setInputValue] = useState<string>(value)
-
   return (
     <div className="my-3 flex flex-col w-80">
       <label htmlFor={id}>{label}</label>
       <input
-        value={inputValue}
+        value={value}
         onChange={(e) => {
           onChange?.(e)
-          setInputValue(e.target.value)
         }}
         placeholder={placeholder}
         id={id}

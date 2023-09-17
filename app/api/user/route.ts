@@ -7,20 +7,17 @@ import {
 } from "../apiUtils/apiUtils"
 
 export async function DELETE(req: NextRequest) {
-  console.log("im here")
-
   const token = await getToken({ req }).then((token) => token)
   if (!token)
     return NextResponse.json(generateErrorResponse("Unauthorized"), {
       status: 401,
     })
   try {
-    console.log("im hereee")
+    console.info(`Deleting user ${token.username}`)
     const deletedUser = await prisma.user.update({
       where: { username: token.username },
       data: { deletedAt: new Date() },
     })
-    console.log(deletedUser)
 
     if (deletedUser)
       return NextResponse.json(

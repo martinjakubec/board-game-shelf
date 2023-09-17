@@ -1,8 +1,8 @@
 "use client"
 
-import Button from "@/components/Button/Button"
 import PageTitle from "@/components/PageTitle/PageTitle"
 import BGGSection from "@/components/Profile/BGGSection/BGGSection"
+import UserInfoSection from "@/components/Profile/UserInfoSection/UserInfoSection"
 import { useSession } from "next-auth/react"
 
 export default function Page() {
@@ -10,14 +10,9 @@ export default function Page() {
 
   return (
     <>
-      <PageTitle>Profile - {data?.user.username}</PageTitle>
+      <PageTitle>Profile settings - {data?.user.username}</PageTitle>
       <BGGSection bggUsername={data?.user.bggUsername || ""} />
-      <Button
-        text="test"
-        onClick={async () => {
-          await fetch("/api/user", { method: "DELETE" })
-        }}
-      />
+      <UserInfoSection />
     </>
   )
 }

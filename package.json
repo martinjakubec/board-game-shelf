@@ -9,7 +9,8 @@
     "lint": "next lint",
     "prisma:seed": "ts-node ./utils/db/seed.ts",
     "prisma:migrate": "npx prisma migrate dev",
-    "prisma:generate": "npx prisma generate"
+    "prisma:generate": "npx prisma generate",
+    "test": "jest"
   },
   "dependencies": {
     "@prisma/client": "^5.2.0",
@@ -35,8 +36,10 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/jest": "^29.5.5",
     "@types/uuid": "^9.0.3",
     "dotenv": "^16.3.1",
+    "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1"
   }
 }
