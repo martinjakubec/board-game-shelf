@@ -1,16 +1,27 @@
 import Button from "@/components/Button/Button"
 import Form from "@/components/Form/Form"
 import Input from "@/components/Input/Input"
+import { signOut } from "next-auth/react"
 import { useState } from "react"
 
 export default function DeleteProfile() {
   const [deleteConfirmation, setDeleteConfirmation] = useState("")
+  const [deleteError, setDeleteError] = useState("")
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // if (deleteConfirmation !== "DELETE") {
-    //   return
-    // }
-    console.log("delete profile")
+    if (deleteConfirmation !== "DELETE") {
+      return
+    }
+    const deleteRequest = await fetch("/api/user", {
+      method: "DELETE",
+    })
+    const deleteResponse = await deleteRequest.json()
+    if (deleteResponse.success) {
+      await signOut()
+    } else {
+      setDeleteError(deleteResponse.error)
+    }
   }
 
   return (
@@ -28,8 +39,9 @@ export default function DeleteProfile() {
             setDeleteConfirmation(e.target.value)
           }}
         />
+        {deleteError && <p className="text-red-500 pb-4">{deleteError}</p>}
+        <Button text="Delete profile" type="submit" variant="danger" />
       </Form>
-      <Button text="Delete profile" variant="danger" />
     </div>
   )
 }

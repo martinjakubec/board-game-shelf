@@ -30,7 +30,7 @@ export default function Input({
 
   return (
     <div className="my-3 flex flex-col w-80">
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id}>{label}{required && '*'}</label>
       <input
         value={value}
         onChange={(e) => {

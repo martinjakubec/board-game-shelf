@@ -8,6 +8,9 @@ const handler = NextAuth({
     colorScheme: "light",
     logo: "/favicon.ico",
   },
+  pages: {
+    signIn: "/login",
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -16,27 +19,31 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const username = credentials?.username
-        const password = credentials?.password
-
-        if (username && password) {
-          const user = await prisma.user.findFirst({
-            where: {
-              username,
-              deletedAt: null,
-            },
-          })
-          if (user && (await compare(password, user.password))) {
-            const userObject = {
-              username: user.username,
-              bggUsername: user.bggUsername,
+        try {
+          const username = credentials?.username
+          const password = credentials?.password
+  
+          if (username && password) {
+            const user = await prisma.user.findFirst({
+              where: {
+                username,
+                deletedAt: null,
+              },
+            })
+            if (user && (await compare(password, user.password))) {
+              const userObject = {
+                username: user.username,
+                bggUsername: user.bggUsername,
+              }
+              return userObject as any
             }
-            console.log('correct password and stuff', userObject);
-            return userObject as any
+            return null
           }
           return null
+        } catch (err) {
+          console.error(err)
+          return null
         }
-        return null
       },
     }),
   ],
