@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { BGGBoardgameItem } from "@/utils/collection/fetcher"
-import Image from "next/image"
-import { MouseEventHandler } from "react"
 
 export default function GameCard({
   boardgame,
@@ -11,13 +9,19 @@ export default function GameCard({
   showModalFunction: (gameId: string) => any
 }) {
   const boardgameName = Array.isArray(boardgame.name)
-    ? boardgame.name[0].value
+    ? boardgame.name[0]?.value
     : boardgame.name.value
   return (
     <div
-      className="cursor-pointer y-8 rounded-xl bg-lime-300 duration-300 hover:-translate-y-1 overflow-hidden"
+      tabIndex={0}
+      className="cursor-pointer y-8 rounded-xl bg-lime-300 hover:bg-lime-500 focus:bg-lime-500 focus:outline-none border-4 border-transparent focus:border-lime-700 duration-200 focus:-translate-y-1 hover:-translate-y-1 will-change-transform overflow-hidden"
       onClick={() => {
         showModalFunction(boardgame.id)
+      }}
+      onKeyDown={(e) => {
+        if (e.code === "Enter") {
+          showModalFunction(boardgame.id)
+        }
       }}
     >
       <img

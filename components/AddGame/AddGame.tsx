@@ -1,8 +1,6 @@
 import { useState } from "react"
 import Button from "../Button/Button"
-import { Modal } from "../Modal/Modal"
-import { ModalTitle } from "../Modal/ModalTitle"
-import { ModalBody } from "../Modal/ModalBody"
+import { AddGameModal } from "../AddGameModal/AddGameModal"
 
 export function AddGame() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
@@ -17,10 +15,11 @@ export function AddGame() {
         }}
       />
       {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <ModalTitle>Test</ModalTitle>
-          <ModalBody>Test body</ModalBody>
-        </Modal>
+        <AddGameModal
+          onClose={() => {
+            setIsModalOpen(false)
+          }}
+        />
       )}
     </>
   )

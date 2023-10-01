@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
     const userToUpdate = await prisma.user.findUnique({
       where: {
         username: token.username,
+        deletedAt: null,
       },
     })
 
@@ -161,6 +162,7 @@ export async function DELETE(req: NextRequest) {
     const userToUpdate = await prisma.user.findUnique({
       where: {
         username: token.username,
+        deletedAt: null,
       },
     })
 

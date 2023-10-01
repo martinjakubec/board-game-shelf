@@ -24,7 +24,7 @@ export function Modal({ children, onClose }: ModalProps) {
   return (
     <div
       className={
-        "fixed h-screen w-screen bg-slate-500 bg-opacity-50 z-10 top-0 left-0"
+        "fixed h-screen w-screen bg-slate-500 bg-opacity-70 z-10 top-0 left-0"
       }
       onClick={onClose}
     >

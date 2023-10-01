@@ -4,9 +4,6 @@ import { BGGBoardgameItem } from "@/utils/collection/fetcher"
 import GameCard from "../GameCard/GameCard"
 import { useEffect, useState } from "react"
 import GameDetailModal from "../GameDetailModal/GameDetailModal"
-import { Modal } from "../Modal/Modal"
-import { ModalTitle } from "../Modal/ModalTitle"
-import { ModalBody } from "../Modal/ModalBody"
 
 export default function GameGrid({
   boardgames,
@@ -53,6 +50,7 @@ export default function GameGrid({
           boardgame={currentBoardgame}
           onClose={() => {
             setIsModalOpen(false)
+            setCurrentBoardgame(null)
             setModalId(null)
           }}
         />

@@ -22,7 +22,7 @@ const handler = NextAuth({
         try {
           const username = credentials?.username
           const password = credentials?.password
-  
+
           if (username && password) {
             const user = await prisma.user.findFirst({
               where: {
@@ -49,28 +49,17 @@ const handler = NextAuth({
   ],
   callbacks: {
     session({ session, token, user }) {
-      // console.log("in session")
-      // console.log("token", token)
-
       session.user.username = token.username as string
-      session.user.bggUsername = token.bggUsername as string
 
       return session
     },
     jwt({ token, user, trigger }) {
-      // console.log("in token")
-      // console.log("token", token)
-      // console.log("user", user)
-      // console.log("trigger", trigger)
-
       return trigger == "signIn"
         ? {
             username: user?.username,
-            bggUsername: user?.bggUsername,
           }
         : {
             username: token.username,
-            bggUsername: token.bggUsername,
           }
     },
   },

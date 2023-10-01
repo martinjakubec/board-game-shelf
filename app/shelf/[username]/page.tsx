@@ -1,10 +1,7 @@
 "use client"
 
 import GameGrid from "@/components/GameGrid/GameGrid"
-import PageTitle from "@/components/PageTitle/PageTitle"
 import { userCollectionFetcher } from "@/utils/collection/fetcher"
-import { FormEventHandler, useRef } from "react"
-import { useRouter } from "next/navigation"
 import ShelfBar from "@/components/ShelfBar/ShelfBar"
 import { useQuery } from "react-query"
 
@@ -19,7 +16,7 @@ export default function Page({
     isLoading,
   } = useQuery(["userCollection", "Aenelruun"], () =>
     userCollectionFetcher("Aenelruun")
-  ) 
+  )
   // TODO: replace Aenelruun with username
 
   return (

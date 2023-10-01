@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
         )
       }
       const user = await prisma.user.findUnique({
-        where: { username: token.username },
+        where: { username: token.username, deletedAt: null },
       })
       if (user && (await compare(oldPassword, user.password))) {
         const updatedUser = await prisma.user.update({
