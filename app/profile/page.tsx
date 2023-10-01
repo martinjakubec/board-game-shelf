@@ -10,29 +10,11 @@ import { ApiError, ApiSuccess } from "../api/apiUtils/apiUtils"
 export default function Page() {
   const { data } = useSession()
 
-  const {
-    data: userData,
-    isLoading,
-    refetch,
-  } = useQuery("user", async (): Promise<string> => {
-    const request = await fetch("/api/user/bggUsername")
-    const response: ApiSuccess<{ bggUsername: string }> | ApiError =
-      await request.json()
-    if (response.success) {
-      return response.data.bggUsername
-    }
-    throw new Error(response.error)
-  })
-
   return (
     <>
       <PageTitle>Profile settings - {data?.user.username}</PageTitle>
       <BGGSection
-        bggUsername={userData || ""}
-        onUsernameChange={() => {
-          refetch()
-        }}
-        isLoading={isLoading}
+        username={data?.user.username || ""}
       />
       <UserInfoSection />
     </>

@@ -14,8 +14,8 @@ export default function Page({
     data: boardgamesData,
     error,
     isLoading,
-  } = useQuery(["userCollection", "Aenelruun"], () =>
-    userCollectionFetcher("Aenelruun")
+  } = useQuery(["userCollection", username], () =>
+    userCollectionFetcher(username)
   )
   // TODO: replace Aenelruun with username
 

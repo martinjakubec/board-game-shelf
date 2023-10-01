@@ -1,5 +1,6 @@
 import { parseStringPromise } from "xml2js"
 import { QueryFunction } from "react-query"
+import { ApiError, ApiSuccess } from "@/app/api/apiUtils/apiUtils"
 
 export type BGGBoardgameItem = {
   type: string
@@ -119,58 +120,63 @@ const dummyResponse: BGGBoardgameResponse = {
 }
 
 export const userCollectionFetcher = async (
-  bggUsername: string,
-  username?: string
+  username: string
 ): Promise<BGGBoardgameResponse> => {
   // return Promise.resolve(dummyResponse)
   try {
-    // ADD HANDLING FOR WHEN USER IS NOT FOUND/HAVE 0 GAMES IN COLLECTION
+    const bgsBoardGameRequest = await fetch(`/api/user/game/${username}`)
+    const bgsBoardGameResponse = await bgsBoardGameRequest.json()
 
-    const userCollectionResponse = await fetch(
-      `https://boardgamegeek.com/xmlapi2/collection?username=${bggUsername}&brief=1&own=1`,
-      { method: "GET" }
-    )
-    const parsedCollectionResponse = await userCollectionResponse.text()
+    let boardGameIds = ""
 
-    const collectionData: BGGUserCollectionResponse = await parseStringPromise(
-      parsedCollectionResponse,
-      {
-        ignoreAttrs: !true,
-        mergeAttrs: true,
-        explicitArray: false,
-      }
-    )
-
-    const totalItems = parseInt(collectionData.items?.totalitems)
-    if (isNaN(totalItems)) throw new Error()
-
-    if (totalItems == 0) {
-      return {
-        items: {
-          item: [],
-        },
-      } as BGGBoardgameResponse
-      // see if the user exists and if it does,
+    if (bgsBoardGameResponse.success) {
+      boardGameIds = bgsBoardGameResponse.data.join(",")
+      console.log(boardGameIds)
     } else {
+      throw new Error(bgsBoardGameResponse.error)
     }
 
-    let boardGameIds = collectionData.items.item
-      .map((item) => {
-        return item.objectid
-      })
-      .join(",")
+    const bggUsernameRequest = await fetch(`/api/user/bggUsername/${username}`)
+    const bggUsernameResponse: ApiSuccess<{ bggUsername: string }> | ApiError =
+      await bggUsernameRequest.json()
+    let bggUsername
+    if (bggUsernameResponse.success) {
+      bggUsername = bggUsernameResponse.data.bggUsername
+    }
 
-    console.log(username)
-    if (username) {
-      const bgsBoardGameRequest = await fetch(`/api/user/game/${username}`)
-      const bgsBoardGameResponse = await bgsBoardGameRequest.json()
+    if (bggUsername) {
+      // TODO add checking if user exists on bgg with endpoint https://boardgamegeek.com/xmlapi2/user?name=aenelruunn
+      const userCollectionResponse = await fetch(
+        `https://boardgamegeek.com/xmlapi2/collection?username=${bggUsername}&brief=1&own=1`,
+        { method: "GET" }
+      )
+      const parsedCollectionResponse = await userCollectionResponse.text()
 
-      if (bgsBoardGameResponse.success) {
-        boardGameIds += "," + bgsBoardGameResponse.data.join(",")
-        console.log(boardGameIds)
-      } else {
-        throw new Error(bgsBoardGameResponse.error)
+      const collectionData: BGGUserCollectionResponse =
+        await parseStringPromise(parsedCollectionResponse, {
+          ignoreAttrs: !true,
+          mergeAttrs: true,
+          explicitArray: false,
+        })
+
+      const totalItems = parseInt(collectionData.items?.totalitems)
+      if (isNaN(totalItems)) throw new Error()
+
+      if (totalItems == 0) {
+        return {
+          items: {
+            item: [],
+          },
+        } as BGGBoardgameResponse
       }
+
+      boardGameIds +=
+        "," +
+        collectionData.items.item
+          .map((item) => {
+            return item.objectid
+          })
+          .join(",")
     }
 
     const boardGameResponse = await fetch(

@@ -19,9 +19,9 @@ export default function Page() {
     isLoading,
   } = useQuery(
     ["userCollection", "Aenelruun"],
-    () => userCollectionFetcher("Aenelruun", data!.user.username),
+    () => userCollectionFetcher(data!.user.username),
     { enabled: status === "authenticated" && !!data?.user.username }
-  ) 
+  )
   // TODO: replace Aenelruun with username
 
   return (

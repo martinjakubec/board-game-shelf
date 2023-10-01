@@ -39,22 +39,24 @@ export default function ShelfBar({
               ref={inputRef}
               type="text"
               className="w-80 px-4 rounded-md h-10 leading-10 md:leading-normal"
-              placeholder="Username to find shelf for..."
+              placeholder="BGS user to find shelf for..."
             />
             <div className="h-full flex gap-4">
               <button
                 type="submit"
-                className="bg-lime-300 px-4 rounded-md w-1/2 h-10 md:h-auto"
+                className="bg-lime-300 px-4 rounded-md h-10 md:h-auto"
               >
                 Go!
               </button>
-              <button
-                type="button"
-                onClick={() => router.push("/shelf")}
-                className="bg-lime-200 px-4 rounded-md w-1/2 h-10 md:h-auto"
-              >
-                Reset
-              </button>
+              {isAnotherUsersCollection && (
+                <button
+                  type="button"
+                  onClick={() => router.push("/shelf")}
+                  className="bg-lime-200 px-4 rounded-md  h-10 md:h-auto"
+                >
+                  Reset
+                </button>
+              )}
             </div>
           </form>
         </div>

@@ -1,33 +1,44 @@
+import { ApiError, ApiSuccess } from "@/app/api/apiUtils/apiUtils"
 import Button from "@/components/Button/Button"
 import Form from "@/components/Form/Form"
 import Input from "@/components/Input/Input"
 import { signIn } from "next-auth/react"
 import { useEffect, useState } from "react"
-import { useMutation } from "react-query"
+import { useMutation, useQuery } from "react-query"
 
 interface BGGSectionProps {
-  bggUsername: string
-  onUsernameChange: () => any
-  isLoading: boolean
+  username: string
 }
 
-export default function BGGSection({
-  bggUsername,
-  onUsernameChange,
-  isLoading,
-}: BGGSectionProps) {
+export default function BGGSection({ username }: BGGSectionProps) {
   const [inputBggUsername, setInputBggUsername] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [successMessage, setSuccessMessage] = useState<string>("")
 
+  const {
+    data: bggUsername,
+    isLoading,
+    refetch,
+  } = useQuery("user", async (): Promise<string> => {
+    const request = await fetch(`/api/user/bggUsername/${username}`)
+    const response: ApiSuccess<{ bggUsername: string }> | ApiError =
+      await request.json()
+    if (response.success) {
+      return response.data.bggUsername
+    }
+    throw new Error(response.error)
+  }, {
+    enabled: !!username,
+  })
+
   useEffect(() => {
-    setInputBggUsername(bggUsername)
+    setInputBggUsername(bggUsername || "")
   }, [bggUsername])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     try {
-      const bggChangeRequest = await fetch("/api/user/bggUsername", {
+      const bggChangeRequest = await fetch(`/api/user/bggUsername/`, {
         method: "POST",
         body: JSON.stringify({ bggUsername: inputBggUsername }),
       })
@@ -36,7 +47,7 @@ export default function BGGSection({
       if (bggChangeResponse.success) {
         setErrorMessage("")
         setSuccessMessage("Successfully updated BGG username")
-        onUsernameChange()
+        refetch()
         return
       }
       setSuccessMessage("")
@@ -72,7 +83,7 @@ export default function BGGSection({
             type="button"
             variant="light"
             onClick={() => {
-              setInputBggUsername(bggUsername)
+              setInputBggUsername(bggUsername || "")
             }}
           />
         </div>
