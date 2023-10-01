@@ -90,11 +90,13 @@ const dummyResponse: BGGBoardgameResponse = {
         minplaytime: {
           value: "20",
         },
-        name: {
-          sortindex: 1,
-          type: "primary",
-          value: "Test game",
-        },
+        name: [
+          {
+            sortindex: 1,
+            type: "primary",
+            value: "Test game",
+          },
+        ],
         thumbnail:
           "https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__original/img/AkbtYVc6xXJF3c9EUrakklcclKw=/0x0/filters:format(png)/pic6973671.png",
         statistics: {
@@ -116,13 +118,16 @@ const dummyResponse: BGGBoardgameResponse = {
   },
 }
 
-export const userCollectionFetcher = async (username: string): Promise<BGGBoardgameResponse> => {
-  return Promise.resolve(dummyResponse)
+export const userCollectionFetcher = async (
+  bggUsername: string,
+  username?: string
+): Promise<BGGBoardgameResponse> => {
+  // return Promise.resolve(dummyResponse)
   try {
     // ADD HANDLING FOR WHEN USER IS NOT FOUND/HAVE 0 GAMES IN COLLECTION
 
     const userCollectionResponse = await fetch(
-      `https://boardgamegeek.com/xmlapi2/collection?username=${username}&brief=1&own=1`,
+      `https://boardgamegeek.com/xmlapi2/collection?username=${bggUsername}&brief=1&own=1`,
       { method: "GET" }
     )
     const parsedCollectionResponse = await userCollectionResponse.text()
@@ -149,11 +154,25 @@ export const userCollectionFetcher = async (username: string): Promise<BGGBoardg
     } else {
     }
 
-    const boardGameIds = collectionData.items.item
+    let boardGameIds = collectionData.items.item
       .map((item) => {
         return item.objectid
       })
       .join(",")
+
+    console.log(username)
+    if (username) {
+      const bgsBoardGameRequest = await fetch(`/api/user/game/${username}`)
+      const bgsBoardGameResponse = await bgsBoardGameRequest.json()
+
+      if (bgsBoardGameResponse.success) {
+        boardGameIds += "," + bgsBoardGameResponse.data.join(",")
+        console.log(boardGameIds)
+      } else {
+        throw new Error(bgsBoardGameResponse.error)
+      }
+    }
+
     const boardGameResponse = await fetch(
       `https://boardgamegeek.com/xmlapi2/thing?id=${boardGameIds}&type=boardgame&stats=1`,
       { method: "GET" }
@@ -168,7 +187,6 @@ export const userCollectionFetcher = async (username: string): Promise<BGGBoardg
     return boardgameData as BGGBoardgameResponse
   } catch (err) {
     const error = new Error("User not found", { cause: err })
-    // error.
     throw error
   }
 }

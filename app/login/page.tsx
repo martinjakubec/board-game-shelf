@@ -4,15 +4,19 @@ import Button from "@/components/Button/Button"
 import Form from "@/components/Form/Form"
 import Input from "@/components/Input/Input"
 import PageTitle from "@/components/PageTitle/PageTitle"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
-import {  useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export default function SignIn() {
   const searchParams = useSearchParams()
   const error = searchParams.get("error")
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const { status } = useSession()
+  const router = useRouter()
 
   useEffect(() => {
     if (error) {
@@ -31,11 +35,16 @@ export default function SignIn() {
   const [username, setUsername] = useState<string>("")
   const [password, setPassword] = useState<string>("")
 
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/shelf")
+    }
+  }, [status, router])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(username, password);
-    
+    console.log(username, password)
+
     await signIn("credentials", {
       username,
       password,
@@ -46,7 +55,10 @@ export default function SignIn() {
   return (
     <div className="flex flex-col items-center justify-center">
       <PageTitle>Login</PageTitle>
-      <Form onSubmit={handleSubmit} className="flex flex-col items-center justify-center">
+      <Form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center justify-center"
+      >
         <Input
           id="username"
           type="text"

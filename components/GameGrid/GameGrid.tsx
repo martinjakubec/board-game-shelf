@@ -1,7 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
+
 import { BGGBoardgameItem } from "@/utils/collection/fetcher"
 import GameCard from "../GameCard/GameCard"
 import { useEffect, useState } from "react"
 import GameDetailModal from "../GameDetailModal/GameDetailModal"
+import { Modal } from "../Modal/Modal"
+import { ModalTitle } from "../Modal/ModalTitle"
+import { ModalBody } from "../Modal/ModalBody"
 
 export default function GameGrid({
   boardgames,
@@ -10,10 +15,10 @@ export default function GameGrid({
 }) {
   const sortedBoardgames = boardgames.sort((gameA, gameB) => {
     const nameA = Array.isArray(gameA.name)
-      ? gameA.name[0].value
+      ? gameA.name[0]?.value || "N/A"
       : gameA.name.value
     const nameB = Array.isArray(gameB.name)
-      ? gameB.name[0].value
+      ? gameB.name[0]?.value || "N/A"
       : gameB.name.value
     if (nameA < nameB) {
       return -1
@@ -32,30 +37,23 @@ export default function GameGrid({
     setModalId(gameId)
   }
 
-  const hideModal = (e: KeyboardEvent | null) => {
-    if (e && e.type == "keydown" && (e as KeyboardEvent).code == "Escape") {
-      setModalId(null)
-      setIsModalOpen(false)
-    }
-  }
+  const [currentBoardgame, setCurrentBoardgame] =
+    useState<BGGBoardgameItem | null>(null)
 
   useEffect(() => {
-    document.addEventListener("keydown", hideModal)
-
-    return () => {
-      document.removeEventListener("keydown", hideModal)
+    if (modalId) {
+      setCurrentBoardgame(sortedBoardgames.find((game) => game.id == modalId)!)
     }
-  }, [])
+  }, [modalId, sortedBoardgames])
 
   return (
     <>
-      {isModalOpen && modalId && (
+      {isModalOpen && modalId && currentBoardgame && (
         <GameDetailModal
-          isOpen={isModalOpen}
-          boardgame={sortedBoardgames.find((game) => game.id == modalId)!}
-          hideModalFunction={() => {
-            setModalId(null)
+          boardgame={currentBoardgame}
+          onClose={() => {
             setIsModalOpen(false)
+            setModalId(null)
           }}
         />
       )}

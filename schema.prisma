@@ -8,10 +8,18 @@ generator client {
 }
 
 model User {
-  id          String @id @default(uuid())
-  username    String @unique
+  id          String    @id @default(uuid())
+  username    String    @unique
   password    String
   bggUsername String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
   deletedAt   DateTime?
+  games       Game[]
+}
+
+model Game {
+  id        String @id @default(uuid())
+  bggGameId String
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String
 }

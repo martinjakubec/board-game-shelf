@@ -7,6 +7,7 @@ import PageTitle from "@/components/PageTitle/PageTitle"
 import { useEffect, useState } from "react"
 import { isNewPasswordValid } from "../api/apiUtils/passwordValidator"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 
 export default function Register() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -18,8 +19,10 @@ export default function Register() {
 
   const router = useRouter()
 
+  const { status } = useSession()
+
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
+    let interval: ReturnType<typeof setInterval>
     if (shouldRedirect) {
       interval = setTimeout(() => {
         router.push("/login")
@@ -27,6 +30,12 @@ export default function Register() {
     }
     return () => clearInterval(interval)
   }, [shouldRedirect, router])
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/shelf")
+    }
+  }, [status, router])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

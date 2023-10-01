@@ -2,9 +2,15 @@ import AppbarButton from "./AppbarButton";
 import AppbarLink from "./AppbarLink"
 import { useSession as useAuthSession } from "next-auth/react";
 
+type MenuLink = {
+  href: string
+  text: string
+  protected: boolean
+}
+
 export default function Appbar() {
   const { data } = useAuthSession()
-  const menuLinks: { href: string; text: string; protected: boolean }[] = [
+  const menuLinks: MenuLink[] = [
     { href: "/shelf", text: "Shelf", protected: true },
     {
       href: "/profile",
@@ -46,7 +52,8 @@ export function LoginButton() {
   }
   return (
     <>
-      <AppbarButton text="Login" onClick={() => signIn()} />
+      <AppbarLink text="Register" href="/register" />
+      <AppbarLink text="Sign in" href="/login" />
     </>
   )
 }
