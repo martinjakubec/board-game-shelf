@@ -162,14 +162,6 @@ export const userCollectionFetcher = async (
       const totalItems = parseInt(collectionData.items?.totalitems)
       if (isNaN(totalItems)) throw new Error()
 
-      if (totalItems == 0) {
-        return {
-          items: {
-            item: [],
-          },
-        } as BGGBoardgameResponse
-      }
-
       boardGameIds +=
         "," +
         collectionData.items.item
@@ -177,6 +169,14 @@ export const userCollectionFetcher = async (
             return item.objectid
           })
           .join(",")
+    }
+
+    if (boardGameIds.length === 0) {
+      return {
+        items: {
+          item: [],
+        },
+      } as BGGBoardgameResponse
     }
 
     const boardGameResponse = await fetch(
