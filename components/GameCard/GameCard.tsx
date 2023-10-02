@@ -30,6 +30,19 @@ export default function GameCard({
         className="w-full aspect-square object-cover bg-lime-200"
         alt={`Cover art for ${boardgameName}`}
       />
+      <div className="absolute top-2 right-2 w-8">
+        {boardgame.source.includes("bgg") && (
+          <img
+            loading="lazy"
+            src="https://cf.geekdo-static.com/images/logos/navbar-logo-bgg-b2.svg"
+            alt="BoardGameGeek logo"
+            className="mb-1"
+          />
+        )}
+        {boardgame.source.includes("bgs") && (
+          <span className="bg-lime-500 block w-full text-center font-bold text-white text-xs">BGS</span>
+        )}
+      </div>
       <div className="p-4">
         <h3 className="text-lg">{boardgameName}</h3>
         <p className="text-sm">{boardgame.yearpublished.value}</p>

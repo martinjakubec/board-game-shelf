@@ -11,15 +11,13 @@ export type GetUserGamesParams = {
   }
 }
 
-export enum GetUserGamesError {
-  USER_NOT_FOUND = "User not found",
-  NO_GAMES_FOUND = "No games found",
-}
+// export enum GetUserGamesError {
+//   USER_NOT_FOUND = "User not found",
+//   NO_GAMES_FOUND = "No games found",
+// }
 
 export async function GET(req: NextRequest, routeParams: GetUserGamesParams) {
   const { username } = routeParams.params
-
-  console.log(username)
 
   const userToFind = await prisma.user.findUnique({
     where: {
@@ -27,11 +25,7 @@ export async function GET(req: NextRequest, routeParams: GetUserGamesParams) {
     },
   })
 
-  console.log(userToFind)
-
   if (!userToFind) {
-    console.log('huh');
-    
     return NextResponse.json(generateErrorResponse("User not found"), {
       status: 404,
     })

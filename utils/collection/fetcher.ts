@@ -47,6 +47,7 @@ export type BGGBoardgameItem = {
       }
     }
   }
+  source: ("bgs" | "bgg")[]
 }
 
 export type BGGBoardgameResponse = {
@@ -73,6 +74,7 @@ const dummyResponse: BGGBoardgameResponse = {
     item: [
       {
         description: "Test description",
+        source: ["bgs", "bgg"],
         id: "3955",
         image:
           "https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__original/img/AkbtYVc6xXJF3c9EUrakklcclKw=/0x0/filters:format(png)/pic6973671.png",
@@ -127,11 +129,14 @@ export const userCollectionFetcher = async (
     const bgsBoardGameRequest = await fetch(`/api/user/game/${username}`)
     const bgsBoardGameResponse = await bgsBoardGameRequest.json()
 
+    let bgsBoardgameIds: string[] = []
+    let bggBoardgameIds: string[] = []
+
     let boardGameIds = ""
 
     if (bgsBoardGameResponse.success) {
+      bgsBoardgameIds.push(...bgsBoardGameResponse.data)
       boardGameIds = bgsBoardGameResponse.data.join(",")
-      console.log(boardGameIds)
     } else {
       throw new Error(bgsBoardGameResponse.error)
     }
@@ -145,31 +150,53 @@ export const userCollectionFetcher = async (
     }
 
     if (bggUsername) {
-      // TODO add checking if user exists on bgg with endpoint https://boardgamegeek.com/xmlapi2/user?name=aenelruunn
-      const userCollectionResponse = await fetch(
-        `https://boardgamegeek.com/xmlapi2/collection?username=${bggUsername}&brief=1&own=1`,
+      const doesUserExistRequest = await fetch(
+        `https://boardgamegeek.com/xmlapi2/user?name=${bggUsername}`,
         { method: "GET" }
       )
-      const parsedCollectionResponse = await userCollectionResponse.text()
 
-      const collectionData: BGGUserCollectionResponse =
-        await parseStringPromise(parsedCollectionResponse, {
+      const doesUserExistResponse = await doesUserExistRequest.text()
+
+      const doesUserExistData = await parseStringPromise(
+        doesUserExistResponse,
+        {
           ignoreAttrs: !true,
           mergeAttrs: true,
           explicitArray: false,
-        })
+        }
+      )
 
-      const totalItems = parseInt(collectionData.items?.totalitems)
-      if (isNaN(totalItems)) throw new Error()
+      if (doesUserExistData.user.id) {
+        const userCollectionResponse = await fetch(
+          `https://boardgamegeek.com/xmlapi2/collection?username=${bggUsername}&brief=1&own=1`,
+          { method: "GET" }
+        )
+        const parsedCollectionResponse = await userCollectionResponse.text()
 
-      boardGameIds +=
-        "," +
-        collectionData.items.item
-          .map((item) => {
-            return item.objectid
+        const collectionData: BGGUserCollectionResponse =
+          await parseStringPromise(parsedCollectionResponse, {
+            ignoreAttrs: !true,
+            mergeAttrs: true,
+            explicitArray: false,
           })
-          .join(",")
+
+        const totalItems = parseInt(collectionData.items?.totalitems)
+        console.log(totalItems, isNaN(totalItems))
+        if (isNaN(totalItems)) throw new Error("hurr")
+
+        totalItems > 0 &&
+          (boardGameIds +=
+            "," +
+            collectionData.items.item
+              .map((item) => {
+                bggBoardgameIds.push(item.objectid)
+                return item.objectid
+              })
+              .join(","))
+      }
     }
+
+    console.log(boardGameIds)
 
     if (boardGameIds.length === 0) {
       return {
@@ -179,20 +206,43 @@ export const userCollectionFetcher = async (
       } as BGGBoardgameResponse
     }
 
+    const setBoardGameIds = new Set(boardGameIds.split(","))
+    console.log("setBoardgameids", setBoardGameIds)
+
+    boardGameIds = Array.from(setBoardGameIds).join(",")
+    console.log("boardGameIds", boardGameIds)
+
     const boardGameResponse = await fetch(
       `https://boardgamegeek.com/xmlapi2/thing?id=${boardGameIds}&type=boardgame&stats=1`,
       { method: "GET" }
     )
+    if (boardGameResponse.status !== 429) {
+      console.log("BGG API too many requests.")
+    }
     const parsedBoardGameResponse = await boardGameResponse.text()
-    const boardgameData = await parseStringPromise(parsedBoardGameResponse, {
-      ignoreAttrs: !true,
-      mergeAttrs: true,
-      explicitArray: false,
+    const boardgameData: BGGBoardgameResponse = await parseStringPromise(
+      parsedBoardGameResponse,
+      {
+        ignoreAttrs: !true,
+        mergeAttrs: true,
+        explicitArray: false,
+      }
+    )
+
+    // ensures that the item property is always an array
+    Array.isArray(boardgameData.items.item) ||
+      (boardgameData.items.item = [boardgameData.items.item])
+
+    boardgameData.items.item.forEach((item) => {
+      item.source = []
+      if (bggBoardgameIds.includes(item.id)) item.source.push("bgg")
+      if (bgsBoardgameIds.includes(item.id)) item.source.push("bgs")
     })
 
-    return boardgameData as BGGBoardgameResponse
+    return boardgameData
   } catch (err) {
-    const error = new Error("User not found", { cause: err })
+    console.error(err)
+    const error = new Error((err as Error).message, { cause: err })
     throw error
   }
 }

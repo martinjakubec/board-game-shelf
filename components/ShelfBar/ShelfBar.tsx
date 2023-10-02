@@ -29,7 +29,7 @@ export default function ShelfBar({
       ) : (
         <PageTitle>Your shelf</PageTitle>
       )}
-      <div className="flex justify-start flex-col md:flex-row mb-10 lg:mb-0">
+      <div className="flex justify-start flex-col md:flex-row lg:mb-0">
         <div className="flex gap-4 md:h-10 lg:mb-6">
           <form
             onSubmit={handleSubmit}

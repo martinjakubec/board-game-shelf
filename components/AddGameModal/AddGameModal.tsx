@@ -5,14 +5,15 @@ import { ModalTitle } from "../Modal/ModalTitle"
 
 interface AddGameModalProps {
   onClose: () => void
+  refetch: () => any
 }
 
-export function AddGameModal({ onClose }: AddGameModalProps) {
+export function AddGameModal({ onClose, refetch }: AddGameModalProps) {
   return (
     <Modal onClose={onClose}>
       <ModalTitle>Add a new game</ModalTitle>
       <ModalBody>
-        <AddGameByLink />
+        <AddGameByLink refetch={refetch} />
       </ModalBody>
     </Modal>
   )

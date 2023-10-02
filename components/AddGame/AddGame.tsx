@@ -2,7 +2,11 @@ import { useState } from "react"
 import Button from "../Button/Button"
 import { AddGameModal } from "../AddGameModal/AddGameModal"
 
-export function AddGame() {
+interface AddGameProps {
+  refetch: () => any
+}
+
+export function AddGame({refetch}: AddGameProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   return (
@@ -16,6 +20,7 @@ export function AddGame() {
       />
       {isModalOpen && (
         <AddGameModal
+          refetch={refetch}
           onClose={() => {
             setIsModalOpen(false)
           }}

@@ -1,10 +1,7 @@
 "use client"
 
 import GameGrid from "@/components/GameGrid/GameGrid"
-import {
-  BGGBoardgameResponse,
-  userCollectionFetcher,
-} from "@/utils/collection/fetcher"
+import { userCollectionFetcher } from "@/utils/collection/fetcher"
 import ShelfBar from "@/components/ShelfBar/ShelfBar"
 import { useQuery } from "react-query"
 import { AddGame } from "@/components/AddGame/AddGame"
@@ -17,18 +14,18 @@ export default function Page() {
     data: boardgamesData,
     error,
     isLoading,
+    refetch,
   } = useQuery(
-    ["userCollection", "Aenelruun"],
+    ["userCollection", data?.user.username],
     () => userCollectionFetcher(data!.user.username),
-    { enabled: status === "authenticated" && !!data?.user.username }
+    { enabled: status === "authenticated" && !!data?.user.username, retryDelay: 2000 }
   )
-  // TODO: replace Aenelruun with username
 
   return (
     <>
       <ShelfBar isAnotherUsersCollection={false} />
       <div className="py-4">
-        <AddGame />
+        <AddGame refetch={refetch} />
       </div>
       {isLoading && <p className="text-slate-600 text-lg">Loading...</p>}
       {boardgamesData && (
@@ -39,7 +36,10 @@ export default function Page() {
             </p>
           )}
           {boardgamesData && (
-            <GameGrid boardgames={boardgamesData.items.item} />
+            <GameGrid
+              boardgames={boardgamesData.items.item}
+              refetch={refetch}
+            />
           )}
         </div>
       )}

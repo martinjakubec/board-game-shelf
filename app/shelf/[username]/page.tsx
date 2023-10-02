@@ -17,14 +17,13 @@ export default function Page({
   } = useQuery(["userCollection", username], () =>
     userCollectionFetcher(username)
   )
-  // TODO: replace Aenelruun with username
 
   return (
     <>
       <ShelfBar isAnotherUsersCollection={true} username={username} />
-      {isLoading && <p className="text-slate-600 text-lg">Loading...</p>}
+      {isLoading && <p className="text-slate-600 pt-6 text-lg">Loading...</p>}
       {!!error && (
-        <p className="text-slate-600 text-lg">{(error as Error).message}</p>
+        <p className="text-red-500 pt-6 text-lg">{(error as Error).message}</p>
       )}
       {boardgamesData && (
         <div className="flex justify-between flex-wrap">
