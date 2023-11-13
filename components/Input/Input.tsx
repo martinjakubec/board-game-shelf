@@ -10,8 +10,10 @@ interface InputProps {
   placeholder?: string
   className?: string
   withBorder?: boolean
-  value: string
+  value: string | number
   id: string
+  min?: number
+  max?: number
 }
 
 export default function Input({
@@ -24,13 +26,18 @@ export default function Input({
   onChange,
   value,
   id,
+  min,
+  max,
 }: InputProps) {
   const borderSetupString =
     "border-2 focus:border-lime-500 border-lime-300 focus:outline-none"
 
   return (
     <div className="my-3 flex flex-col w-80">
-      <label htmlFor={id}>{label}{required && '*'}</label>
+      <label htmlFor={id}>
+        {label}
+        {required && "*"}
+      </label>
       <input
         value={value}
         onChange={(e) => {
@@ -39,6 +46,8 @@ export default function Input({
         placeholder={placeholder}
         id={id}
         type={type}
+        min={type === "number" ? min : undefined}
+        max={type === "number" ? max : undefined}
         required={required}
         className={`${className} w-80 px-4 rounded-md h-10 leading-10 md:leading-normal ${
           withBorder && borderSetupString

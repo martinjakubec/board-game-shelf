@@ -1,6 +1,6 @@
 import { parseStringPromise } from "xml2js"
-import { QueryFunction } from "react-query"
 import { ApiError, ApiSuccess } from "@/app/api/apiUtils/apiUtils"
+import { dummyResponse } from "../testData"
 
 export type BGGBoardgameItem = {
   type: string
@@ -69,62 +69,10 @@ export type BGGUserCollectionResponse = {
   }
 }
 
-const dummyResponse: BGGBoardgameResponse = {
-  items: {
-    item: [
-      {
-        description: "Test description",
-        source: ["bgs", "bgg"],
-        id: "3955",
-        image:
-          "https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__original/img/AkbtYVc6xXJF3c9EUrakklcclKw=/0x0/filters:format(png)/pic6973671.png",
-        maxplayers: {
-          value: "2",
-        },
-        maxplaytime: {
-          value: "20",
-        },
-        minage: {
-          value: "20",
-        },
-        minplayers: {
-          value: "20",
-        },
-        minplaytime: {
-          value: "20",
-        },
-        name: [
-          {
-            sortindex: 1,
-            type: "primary",
-            value: "Test game",
-          },
-        ],
-        thumbnail:
-          "https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__original/img/AkbtYVc6xXJF3c9EUrakklcclKw=/0x0/filters:format(png)/pic6973671.png",
-        statistics: {
-          ratings: {
-            average: {
-              value: "2",
-            },
-            averageweight: {
-              value: "4",
-            },
-          },
-        },
-        type: "BG type",
-        yearpublished: {
-          value: "2000",
-        },
-      },
-    ],
-  },
-}
-
 export const userCollectionFetcher = async (
   username: string
 ): Promise<BGGBoardgameResponse> => {
-  // return Promise.resolve(dummyResponse)
+  return Promise.resolve(dummyResponse)
   try {
     const bgsBoardGameRequest = await fetch(`/api/user/game/${username}`)
     const bgsBoardGameResponse = await bgsBoardGameRequest.json()
@@ -207,10 +155,8 @@ export const userCollectionFetcher = async (
     }
 
     const setBoardGameIds = new Set(boardGameIds.split(","))
-    console.log("setBoardgameids", setBoardGameIds)
 
     boardGameIds = Array.from(setBoardGameIds).join(",")
-    console.log("boardGameIds", boardGameIds)
 
     const boardGameResponse = await fetch(
       `https://boardgamegeek.com/xmlapi2/thing?id=${boardGameIds}&type=boardgame&stats=1`,
